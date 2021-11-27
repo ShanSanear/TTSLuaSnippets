@@ -1631,7 +1631,7 @@ function onload(saved_data)
 
     spawnedButtonCount = 0
     createTextbox()
-    createButtons()
+    createContextMenu()
 end
 
 
@@ -1786,7 +1786,7 @@ end
 
 
 --Button creation
-function createButoons()
+function createButtons()
 end
 
 --Add context menu
