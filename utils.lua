@@ -63,7 +63,6 @@ end
 
 function changeInputValueAndSaveToRefButtonData(inputIndex, value, ref_buttonData)
     -- NOTE: inputIndex is meant to be inputIndex as per TTS convention (0-based)
-    print("Input index: " .. inputIndex .. " setting value: " .. value)
     ref_buttonData.textbox[inputIndex+1].value = value
     self.editInput({index=inputIndex, value=tostring(value)})
 end
