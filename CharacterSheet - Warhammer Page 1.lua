@@ -94,31 +94,6 @@ function onload(saved_data)
     createContextMenu()
 end
 
-
-
---Click functions for buttons
-
-
-
---Checks or unchecks the given box
-function click_checkbox(tableIndex, buttonIndex)
-    if ref_buttonData.checkbox[tableIndex].state == true then
-        ref_buttonData.checkbox[tableIndex].state = false
-        self.editButton({index=buttonIndex, label=""})
-    else
-        ref_buttonData.checkbox[tableIndex].state = true
-        self.editButton({index=buttonIndex, label=string.char(10008)})
-    end
-    updateSave()
-end
-
---Applies value to given counter display
-function click_counter(tableIndex, buttonIndex, amount)
-    ref_buttonData.counter[tableIndex].value = ref_buttonData.counter[tableIndex].value + amount
-    self.editButton({index=buttonIndex, label=ref_buttonData.counter[tableIndex].value})
-    updateSave()
-end
-
 --Updates saved value for given text box
 function click_textbox(i, value, selected)
     if selected == false then
@@ -126,9 +101,6 @@ function click_textbox(i, value, selected)
         updateSave()
     end
 end
-
---Dud function for if you have a background on a counter
-function click_none() end
 
 function doActualRefresh(inputsTable, attributeObjectMap, skillsObjectMap)
     attributeFinalValue = {}
@@ -245,98 +217,11 @@ function connectOtherSheet(playerColor)
 end
 
 
---Button creation
-function createButtons()
-end
-
 --Add context menu
 function createContextMenu()
     self.addContextMenuItem("Odśwież atrybuty", refreshCounters)
     self.addContextMenuItem("Połącz z drugą kartą", connectOtherSheet)
     self.addContextMenuItem("Przełącz edycję", toggleLockCallback, undefined)
-end
-
-
---Makes checkboxes
-function createCheckbox()
-    for i, data in ipairs(ref_buttonData.checkbox) do
-        --Sets up reference function
-        local buttonNumber = spawnedButtonCount
-        local funcName = "checkbox"..i
-        local func = function() click_checkbox(i, buttonNumber) end
-        self.setVar(funcName, func)
-        --Sets up label
-        local label = ""
-        if data.state==true then label=string.char(10008) end
-        --Creates button and counts it
-        self.createButton({
-            label=label, click_function=funcName, function_owner=self,
-            position=defaultButtonData.checkbox[i].pos,
-            height=defaultButtonData.checkbox[i].size,
-            width=defaultButtonData.checkbox[i].size,
-            font_size=defaultButtonData.checkbox[i].size, scale=buttonScale,
-            color=buttonColor, font_color=buttonFontColor
-        })
-        spawnedButtonCount = spawnedButtonCount + 1
-    end
-end
-
---Makes counters
-function createCounter()
-    for i, data in ipairs(ref_buttonData.counter) do
-        --Sets up display
-        local displayNumber = spawnedButtonCount
-        --Sets up label
-        local label = data.value
-        --Sets height/width for display
-        local size = data.size
-        if data.hideBG == true then size = 0 end
-        --Creates button and counts it
-        self.createButton({
-            label=label, click_function="click_none", function_owner=self,
-            position=data.pos, height=size, width=size,
-            font_size=data.size, scale=buttonScale,
-            color=buttonColor, font_color=buttonFontColor
-        })
-        spawnedButtonCount = spawnedButtonCount + 1
-
-        --Sets up add 1
-        local funcName = "counterAdd"..i
-        local func = function() click_counter(i, displayNumber, 1) end
-        self.setVar(funcName, func)
-        --Sets up label
-        local label = "+"
-        --Sets up position
-        local offsetDistance = (data.size/2 + data.size/4) * (buttonScale[1] * 0.002)
-        local pos = {data.pos[1] + offsetDistance, data.pos[2], data.pos[3]}
-        --Sets up size
-        local size = data.size / 2
-        --Creates button and counts it
-        self.createButton({
-            label=label, click_function=funcName, function_owner=self,
-            position=pos, height=size, width=size,
-            font_size=size, scale=buttonScale,
-            color=buttonColor, font_color=buttonFontColor
-        })
-        spawnedButtonCount = spawnedButtonCount + 1
-
-        --Sets up subtract 1
-        local funcName = "counterSub"..i
-        local func = function() click_counter(i, displayNumber, -1) end
-        self.setVar(funcName, func)
-        --Sets up label
-        local label = "-"
-        --Set up position
-        local pos = {data.pos[1] - offsetDistance, data.pos[2], data.pos[3]}
-        --Creates button and counts it
-        self.createButton({
-            label=label, click_function=funcName, function_owner=self,
-            position=pos, height=size, width=size,
-            font_size=size, scale=buttonScale,
-            color=buttonColor, font_color=buttonFontColor
-        })
-        spawnedButtonCount = spawnedButtonCount + 1
-    end
 end
 
 function createTextbox()
