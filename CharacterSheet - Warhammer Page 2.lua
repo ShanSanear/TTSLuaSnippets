@@ -57,6 +57,7 @@ Begin editing below:    ]]
 -- Improvements
 -- 1. Added possibility of toggling on/off edition of character sheet input fields
 -- 2. Function to be called from Page 1, to automate calculations and said toggling
+-- 3. Heavily reduced number of functions here - most were not used anyway
 require("csWarhammerPage2Data")
 require("utils")
 

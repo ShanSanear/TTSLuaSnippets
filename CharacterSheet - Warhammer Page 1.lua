@@ -59,6 +59,7 @@ Begin editing below:    ]]
 -- 1. Automated calculation of summarized / current value for all attributes and skills
 -- 2. Doing above, but for the other Page of CharacterSheet - needs connecting
 -- 3. Added possibility of toggling on/off edition of character sheet input fields
+-- 4. Heavily reduced number of functions here - most were not used anyway
 
 require("utils")
 require("csWarhammerPage1Data")
