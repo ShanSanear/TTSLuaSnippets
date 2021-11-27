@@ -71,10 +71,6 @@ disableSave = false
 otherSheetGUID = nil
 globalLock = false
 
---Lua beyond this point, I recommend doing something more fun with your life
---FU man, I am doing some job here! -guy who improved this
-
-
 --Save function
 function updateSave()
     saved_data = JSON.encode(ref_buttonData)

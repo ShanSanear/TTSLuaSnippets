@@ -61,16 +61,11 @@ require("csWarhammerPage2Data")
 require("utils")
 
 --Set this to true while editing and false when you have finished
-disableSave = false
+disableSave = true
 --Remember to set this to false once you are done making changes
 --Then, after you save & apply it, save your game too
 
 globalLock = false
-
---This is the button placement information
-
-
---Lua beyond this point, I recommend doing something more fun with your life
 
 function getWoundsTable()
     inputsTable = self.getInputs()
