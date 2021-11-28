@@ -1533,3 +1533,20 @@ defaultButtonData = {
         --End of textboxes
     }
 }
+
+attributeNames = {"WW", "US", "S", "Wt", "I", "Zw", "Zr", "Int", "SW", "Ogd"}
+skillNames = {
+    "Atl", "BBP", "BBD", "Ch", "Dow", "Haz", "In", "Jeź", "MG", "Naw", "Odp", 
+    "Opa", "Osw", "Per", "Plot", "Pow", "Przek", "Skr", "Szt", "Przet", "Targ", "Uni", "Wio", "Wsp", "Wys", "Zas"
+}
+skillsMapping = {
+    WW={"BBP", "BBD"},
+    S={"Wio", "Wsp", "Zas"},
+    Wt={"MG", "Odp"},
+    I={"In", "Naw", "Per"},
+    Zw={"Atl", "Jeź", "Pow", "Skr", "Uni"},
+    Zr={"Szt"},
+    Int={"Haz", "Przet"},
+    SW={"Opa", "Osw"},
+    Ogd={"Ch", "Dow", "Plot", "Przek", "Targ", "Wys"},
+}

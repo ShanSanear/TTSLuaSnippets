@@ -64,6 +64,9 @@ Begin editing below:    ]]
 require("utils")
 require("csWarhammerPage1Data")
 
+attributeObjectMap = {}
+skillsObjectMap = {}
+
 --Set this to true while editing and false when you have finished
 disableSave = false
 --Remember to set this to false once you are done making changes
@@ -72,40 +75,9 @@ disableSave = false
 otherSheetGUID = nil
 globalLock = false
 
---Save function
-function updateSave()
-    saved_data = JSON.encode(ref_buttonData)
-    if disableSave==true then saved_data="" end
-    self.script_state = saved_data
-end
-
---Startup procedure
-function onload(saved_data)
-    if disableSave==true then saved_data="" end
-    if saved_data ~= "" then
-        local loaded_data = JSON.decode(saved_data)
-        ref_buttonData = loaded_data
-        otherSheetGUID = loaded_data.otherSheetGUID
-    else
-        ref_buttonData = defaultButtonData
-    end
-
-    spawnedButtonCount = 0
-    createTextbox()
-    createContextMenu()
-end
-
---Updates saved value for given text box
-function click_textbox(i, value, selected)
-    if selected == false then
-        ref_buttonData.textbox[i].value = value
-        updateSave()
-    end
-end
-
-function doActualRefresh(inputsTable, attributeObjectMap, skillsObjectMap)
+function doActualRefresh(inputsTable)
     attributeFinalValue = {}
-
+    local inputsTable = self.getInputs()
     for attributeName, attributeTextInputs in pairs(attributeObjectMap) do
         local base = getNumberFromValueWithFallback(inputsTable[attributeTextInputs[1]+1].value, "0")
         local added = getNumberFromValueWithFallback(inputsTable[attributeTextInputs[2]+1].value, "0")
@@ -153,28 +125,10 @@ function toggleLockCallback(playerColor)
     otherSheet.call("toggleLockCallback")
 end
 
-function refreshCounters(playerColor)
-    attributeObjectMap = {}
-    attributes = {"WW", "US", "S", "Wt", "I", "Zw", "Zr", "Int", "SW", "Ogd"}
-    skills = {
-        "Atl", "BBP", "BBD", "Ch", "Dow", "Haz", "In", "Jeź", "MG", "Naw", "Odp", 
-        "Opa", "Osw", "Per", "Plot", "Pow", "Przek", "Skr", "Szt", "Przet", "Targ", "Uni", "Wio", "Wsp", "Wys", "Zas"
-    }
-    skillsMapping = {
-        WW={"BBP", "BBD"},
-        S={"Wio", "Wsp", "Zas"},
-        Wt={"MG", "Odp"},
-        I={"In", "Naw", "Per"},
-        Zw={"Atl", "Jeź", "Pow", "Skr", "Uni"},
-        Zr={"Szt"},
-        Int={"Haz", "Przet"},
-        SW={"Opa", "Osw"},
-        Ogd={"Ch", "Dow", "Plot", "Przek", "Targ", "Wys"},
-    }
-    skillsObjectMap = {}
+function loadAttributeAndSkillsReferenceMaps()
     local inputsTable = self.getInputs()
     for inputTableIndex, inputTable in ipairs(inputsTable) do
-        for i, attribute in ipairs(attributes) do
+        for i, attribute in ipairs(attributeNames) do
             if inputTable.label == attribute then
                 if not setContains(attributeObjectMap, attribute) then
                     attributeObjectMap[attribute] = {}
@@ -183,7 +137,7 @@ function refreshCounters(playerColor)
                 table.insert(attributeButtonsIndex, inputTable.index)
             end
         end
-        for i, skill in ipairs(skills) do
+        for i, skill in ipairs(skillNames) do
             if inputTable.label == skill then
                 if not setContains(skillsObjectMap, skill) then
                     skillsObjectMap[skill] = {}
@@ -193,7 +147,11 @@ function refreshCounters(playerColor)
             end
         end
     end
-    attributeFinalValue = doActualRefresh(inputsTable, attributeObjectMap, skillsObjectMap)
+
+end
+
+function refreshCounters(playerColor)
+    attributeFinalValue = doActualRefresh(inputsTable)
     refreshOtherSheet(attributeFinalValue)
     
     updateSave()
@@ -245,5 +203,37 @@ function createTextbox()
             font_color     = buttonFontColor,
             value          = data.value,
         })
+    end
+end
+
+--Save function
+function updateSave()
+    saved_data = JSON.encode(ref_buttonData)
+    if disableSave==true then saved_data="" end
+    self.script_state = saved_data
+end
+
+--Startup procedure
+function onload(saved_data)
+    if disableSave==true then saved_data="" end
+    if saved_data ~= "" then
+        local loaded_data = JSON.decode(saved_data)
+        ref_buttonData = loaded_data
+        otherSheetGUID = loaded_data.otherSheetGUID
+    else
+        ref_buttonData = defaultButtonData
+    end
+
+    spawnedButtonCount = 0
+    createTextbox()
+    createContextMenu()
+    loadAttributeAndSkillsReferenceMaps()
+end
+
+--Updates saved value for given text box
+function click_textbox(i, value, selected)
+    if selected == false then
+        ref_buttonData.textbox[i].value = value
+        updateSave()
     end
 end
