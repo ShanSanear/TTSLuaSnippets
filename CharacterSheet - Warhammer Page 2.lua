@@ -68,26 +68,21 @@ disableSave = true
 
 globalLock = false
 
-function getWoundsTable()
-    inputsTable = self.getInputs()
-    woundsLabels = {"SB", "TB2", "WP", "Hd", "W"}
-    local woundsObjectMap = {}
+woundsObjectMap = {}
+
+function loadWoundsReferenceMaps()
+    local inputsTable = self.getInputs()
     for inputTableIndex, inputTable in ipairs(inputsTable) do
         for i, woundLabel in ipairs(woundsLabels) do
             if inputTable.label == woundLabel then
-                woundsObjectMap[woundLabel] = inputTableIndex
+                woundsObjectMap[woundLabel] = inputsTable[inputTableIndex].index
             end
         end
     end
-    return woundsObjectMap
 end
 
-function setWoundsValues(inputsTable, attributeParams, woundsObjectMap)
-    local sbObjectId = inputsTable[woundsObjectMap["SB"]].index
-    local tb2ObjectId = inputsTable[woundsObjectMap["TB2"]].index
-    local wpObjectId = inputsTable[woundsObjectMap["WP"]].index
-    local hdObjectId = inputsTable[woundsObjectMap["Hd"]].index
-    local wObjectId = inputsTable[woundsObjectMap["W"]].index
+function setWoundsValues(attributeParams)
+    local inputsTable = self.getInputs()
     local strengthBonus = 0
     if not string.find(string.lower(attributeParams.race), "hobbit") then
         strengthBonus = math.floor(attributeParams.strength / 10)
@@ -97,16 +92,15 @@ function setWoundsValues(inputsTable, attributeParams, woundsObjectMap)
     local hardBonus = tonumber(getNumberFromValueWithFallback(inputsTable[woundsObjectMap["Hd"]].value, "0"))
     
     local finalWounds = strengthBonus + enduranceBonus + willPowerBonus + hardBonus
-    changeInputValueAndSaveToRefButtonData(sbObjectId, tostring(strengthBonus), ref_buttonData)
-    changeInputValueAndSaveToRefButtonData(tb2ObjectId, tostring(enduranceBonus), ref_buttonData)
-    changeInputValueAndSaveToRefButtonData(wpObjectId, tostring(willPowerBonus), ref_buttonData)
-    changeInputValueAndSaveToRefButtonData(wObjectId, tostring(finalWounds), ref_buttonData)
+    changeInputValueAndSaveToRefButtonData(woundsObjectMap["SB"], tostring(strengthBonus), ref_buttonData)
+    changeInputValueAndSaveToRefButtonData(woundsObjectMap["TB2"], tostring(enduranceBonus), ref_buttonData)
+    changeInputValueAndSaveToRefButtonData(woundsObjectMap["WP"], tostring(willPowerBonus), ref_buttonData)
+    changeInputValueAndSaveToRefButtonData(woundsObjectMap["W"], tostring(finalWounds), ref_buttonData)
 
 end
 
 function updateBasedOnFirstSheet(attributeParams)
-    local woundsObjectMap = getWoundsTable()
-    setWoundsValues(inputsTable, attributeParams, woundsObjectMap)
+    setWoundsValues(attributeParams)
     updateSave()
 end
 
@@ -135,6 +129,7 @@ function onload(saved_data)
     end
 
     createTextbox()
+    loadWoundsReferenceMaps()
 end
 
 

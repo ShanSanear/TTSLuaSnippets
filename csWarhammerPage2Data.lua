@@ -1537,3 +1537,5 @@ defaultButtonData = {
         --End of textboxes
     }
 }
+
+woundsLabels = {"SB", "TB2", "WP", "Hd", "W"}
